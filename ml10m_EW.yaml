@@ -1,0 +1,129 @@
+general:
+  seed: 0
+  deterministic: False
+  gpu_id: 1
+  save_dir: ./logs/movielens10m_9tasks
+  exp_name: Movielens10M
+
+tasks:
+  info:
+    Crime: &Action
+      metric_fn: RmseMetric
+      loss_fn: MSELoss
+    # Adventure:
+    #   <<: *Action
+    # Animation:
+    #   <<: *Action
+    # Children:
+    #   <<: *Action
+    # Comedy:
+    #   <<: *Action
+    # Crime:
+    #   <<: *Action
+    Documentary:
+      <<: *Action
+    # Drama:
+    #   <<: *Action
+    Fantasy:
+      <<: *Action
+    Film-Noir:
+      <<: *Action
+    Horror:
+      <<: *Action
+    # Musical:
+    #   <<: *Action
+    Mystery:
+      <<: *Action
+    # Romance:
+    #   <<: *Action
+    # Sci-Fi:
+    #   <<: *Action
+    Thriller:
+      <<: *Action
+    War:
+      <<: *Action
+    Western:
+      <<: *Action
+  multi_input: True
+
+
+training:
+  optimizer:
+    name: Adagrad
+    lr: 1.0e-5
+    # lr: 1.0e-3
+    weight_decay: 1.0e-6
+    # weight_decay: 5.0e-4
+  epochs: 15
+  dataloader:
+    train:
+      dataset: &train_dataset
+        name: BST10MDatasetplus 
+        path: ./splitdata
+        augmentation: False
+      batch_size: 256
+      num_workers: 2
+      drop_last: True
+      shuffle: True
+      pin_memory: True
+    test: &val_dataloader
+      dataset:
+        <<: *train_dataset
+      batch_size: 256
+      num_workers: 2
+      drop_last: False
+      shuffle: False
+      pin_memory: True
+    # test:
+    #   <<: *val_dataloader
+
+weighting:
+  name: EW
+  rep_grad: False
+
+architecture:
+  name: HPS
+
+model:
+  encoder: 
+    name: BST10MModelplus
+
+  decoders:
+    Crime: &action_decoder 
+      name: Linear
+      input_num: 256
+      output_num: 1
+    # Adventure:
+    #   <<: *action_decoder 
+    # Animation:
+    #   <<: *action_decoder 
+    # Children:
+    #   <<: *action_decoder 
+    # Comedy:
+    #   <<: *action_decoder 
+    # Crime:
+    #   <<: *action_decoder 
+    Documentary:
+      <<: *action_decoder 
+    # Drama:
+    #   <<: *action_decoder 
+    Fantasy:
+      <<: *action_decoder 
+    Film-Noir:
+      <<: *action_decoder 
+    Horror:
+      <<: *action_decoder 
+    # Musical:
+    #   <<: *action_decoder 
+    Mystery:
+      <<: *action_decoder 
+    # Romance:
+    #   <<: *action_decoder 
+    # Sci-Fi:
+    #   <<: *action_decoder 
+    Thriller:
+      <<: *action_decoder 
+    War:
+      <<: *action_decoder 
+    Western:
+      <<: *action_decoder 
